@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.6</version>
+        <version>2.6.3</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -26,7 +26,7 @@
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.20</org.projectlombok.version>
         <swagger-request-validator.version>2.15.1</swagger-request-validator.version>
-        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
         <logstash.logback.version>6.3</logstash.logback.version>
         <docker.image.prefix>springkubernetes</docker.image.prefix>
         <docker.image.name>${project.artifactId}</docker.image.name>
@@ -35,7 +35,7 @@
 
     <modules>
 <!--        <module>kbe-brewery-gateway</module>-->
-        <module>kbe-coffee-house-service</module>
+        <module>kbe-coffeehouse-coffee-service</module>
     </modules>
 
     <dependencyManagement>
@@ -75,6 +75,10 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+
+    </dependencies>
 
     <build>
         <plugins>
