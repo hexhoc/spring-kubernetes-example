@@ -5,6 +5,11 @@ openApi http://localhost:8080/v3/api-docs/
 ## 1. Description
 
 ## 2. Technical specification
+
+### Create database in postresql
+- Create postgresql instance
+- Create database - postrges
+
 ### Configure liquibase 
 
 - Add in pom.xml: 
@@ -30,3 +35,21 @@ create table test1
 );
 --rollback drop table test1;
 ```
+
+### Configure artemis
+
+- Get docker image 
+```
+docker pull vromero/activemq-artemis
+```
+- Run docker image
+```
+docker run -it --rm -p 8161:8161 -p 61616:61616 vromero/activemq-artemis
+```
+- Set credentials in application.properties
+```
+# defaults for this docker image - vromero/activemq-artemis
+spring.artemis.user=artemis
+spring.artemis.password=simetraehcapa
+```
+
