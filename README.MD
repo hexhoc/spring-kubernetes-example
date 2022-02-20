@@ -7,7 +7,14 @@
 3. Kubernetes
 4. Maven 4.0.0
 
-## INSTALL KUBERNETES
+## INSTALLATION
+### INSTALL POSTGRESQL
+1. Create postgresql database with name - postgres.
+2. Configure connection to sql in following modules:
+   - kbe-coffeehouse-coffee-service
+   - 
+
+### INSTALL KUBERNETES
 
  1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
  2. Open terminal and check nodes using command - kubectl get nodes
