@@ -2,11 +2,13 @@ package com.example.coffeeservice.web.mapper;
 
 import com.example.coffeeservice.dto.CoffeeDto;
 import com.example.coffeeservice.model.Coffee;
+import com.example.coffeeservice.service.inventory.CoffeeInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class CoffeeMapperDecorator implements CoffeeMapper {
-    //TODO Add CoffeeInventoryService
+
+    private CoffeeInventoryService coffeeInventoryService;
     private CoffeeMapper mapper;
 
     @Autowired
@@ -18,7 +20,7 @@ public abstract class CoffeeMapperDecorator implements CoffeeMapper {
     @Override
     public CoffeeDto coffeeToCoffeeDtoWithInventory(Coffee coffee) {
         CoffeeDto dto = mapper.coffeeToCoffeeDto(coffee);
-//        dto.setQuantityOnHand(coffeeInventoryService.getOnhandInventory(coffee.getId()));
+        dto.setQuantityOnHand(coffeeInventoryService.getOnhandInventory(coffee.getId()));
         return dto;
     }
 
