@@ -30,7 +30,7 @@ public class CoffeeServiceImpl implements CoffeeService{
     public Page<Coffee> findAll(String coffeeName, CoffeeStyleEnum coffeeStyle, PageRequest pageRequest, Boolean showInventoryOnHand) {
         //TODO remake this method using JpaSpecification
 
-        log.debug("Listing Beers");
+        log.debug("Listing coffee");
 
         Page<Coffee> coffeePage;
 
@@ -38,10 +38,10 @@ public class CoffeeServiceImpl implements CoffeeService{
             //search both
             coffeePage = coffeeRepository.findAllByCoffeeNameAndCoffeeStyle(coffeeName, coffeeStyle, pageRequest);
         } else if (!StringUtils.isEmpty(coffeeName) && StringUtils.isEmpty(coffeeStyle)) {
-            //search beer_service name
+            //search coffee_service name
             coffeePage = coffeeRepository.findAllByCoffeeName(coffeeName, pageRequest);
         } else if (StringUtils.isEmpty(coffeeName) && !StringUtils.isEmpty(coffeeStyle)) {
-            //search beer_service style
+            //search coffee_service style
             coffeePage = coffeeRepository.findAllByCoffeeStyle(coffeeStyle, pageRequest);
         } else {
             coffeePage = coffeeRepository.findAll(pageRequest);

@@ -15,7 +15,7 @@ public interface CoffeeService {
 
     Coffee save(Coffee coffee);
 
-    void update(UUID beerId, Coffee coffee);
+    void update(UUID coffeeId, Coffee coffee);
 
     void deleteById(UUID coffeeId);
 
