@@ -1,5 +1,7 @@
 # kbe-coffeehouse-coffee-service
 
+openApi http://localhost:8080/v3/api-docs/
+
 ## 1. Description
 
 ## 2. Technical specification
