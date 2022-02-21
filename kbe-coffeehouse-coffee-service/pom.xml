@@ -10,9 +10,7 @@
 
 <artifactId>kbe-coffeehouse-coffee-service</artifactId>
 <version>1.0-SNAPSHOT</version>
-
 <description>KBE CoffeeHouse Coffee Service</description>
-
 <name>KBE CoffeeHouse Coffee Service</name>
 
 <properties>

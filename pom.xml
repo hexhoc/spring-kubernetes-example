@@ -38,6 +38,7 @@
     <modules>
 <!--        <module>kbe-brewery-gateway</module>-->
         <module>kbe-coffeehouse-coffee-service</module>
+        <module>kbe-coffeehouse-inventory-service</module>
     </modules>
 
     <dependencyManagement>
