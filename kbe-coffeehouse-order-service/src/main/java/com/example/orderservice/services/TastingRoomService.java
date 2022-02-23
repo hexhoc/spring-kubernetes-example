@@ -22,7 +22,6 @@ public class TastingRoomService {
     private final CustomerRepository customerRepository;
     private final CoffeeService coffeeService;
 
-    @Scheduled(fixedRateString = "${custom.tasting.room.rate}")
     public void createTastingRoomOrder(){
 
         getRandomCoffee().ifPresent(coffeeId -> {
