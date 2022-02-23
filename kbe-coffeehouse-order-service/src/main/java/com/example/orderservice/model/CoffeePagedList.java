@@ -1,6 +1,6 @@
-package com.example.coffeeservice.model;
+package com.example.orderservice.model;
 
-import com.example.coffeeservice.dto.CoffeeDto;
+import com.example.orderservice.dto.CoffeeDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +31,6 @@ public class CoffeePagedList extends PageImpl<CoffeeDto> {
     }
 
     public CoffeePagedList(List<CoffeeDto> content) {
-        super(content);
+        super(content, PageRequest.of(1, content.size()), content.size());
     }
 }

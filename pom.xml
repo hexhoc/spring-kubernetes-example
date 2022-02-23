@@ -34,12 +34,14 @@
         <org.postgresql>42.3.3</org.postgresql>
         <openapi-ui>1.6.4</openapi-ui>
         <logstash.logback.version>7.0.1</logstash.logback.version>
+        <springframework.statemachine.version>3.0.1</springframework.statemachine.version>
     </properties>
 
     <modules>
 <!--        <module>kbe-brewery-gateway</module>-->
         <module>kbe-coffeehouse-coffee-service</module>
         <module>kbe-coffeehouse-inventory-service</module>
+        <module>kbe-coffeehouse-order-service</module>
     </modules>
 
     <dependencyManagement>
@@ -51,6 +53,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core -->
+            <dependency>
+                <groupId>org.springframework.statemachine</groupId>
+                <artifactId>spring-statemachine-core</artifactId>
+                <version>${springframework.statemachine.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
@@ -81,11 +90,6 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${org.postgresql}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
-                <version>${org.flywaydb}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>

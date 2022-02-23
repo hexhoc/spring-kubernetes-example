@@ -1,4 +1,4 @@
-package com.example.coffeeservice.dto;
+package com.example.orderservice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,14 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CoffeeOrderDto {
+public class OrderStatusUpdate {
 
     @JsonProperty("id")
     private UUID id = null;
@@ -30,9 +29,8 @@ public class CoffeeOrderDto {
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ", shape=JsonFormat.Shape.STRING)
     @JsonProperty("lastModifiedDate")
     private OffsetDateTime lastModifiedDate = null;
-    private UUID customerId;
+
+    private UUID orderId;
     private String customerRef;
-    private List<CoffeeOrderLineDto> coffeeOrderLines;
     private String orderStatus;
-    private String orderStatusCallbackUrl;
 }
