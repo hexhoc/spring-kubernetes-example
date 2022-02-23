@@ -33,6 +33,7 @@
         <docker.skip>true</docker.skip>
         <org.postgresql>42.3.3</org.postgresql>
         <openapi-ui>1.6.4</openapi-ui>
+        <logstash.logback.version>7.0.1</logstash.logback.version>
     </properties>
 
     <modules>
@@ -90,6 +91,11 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${openapi-ui}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash.logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

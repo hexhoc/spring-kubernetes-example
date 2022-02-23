@@ -44,7 +44,7 @@ docker pull vromero/activemq-artemis
 ```
 - Run docker image
 ```
-docker run -it --rm -p 8161:8161 -p 61616:61616 vromero/activemq-artemis
+docker run --name activemq-artemis -it --rm -p 8161:8161 -p 61616:61616 vromero/activemq-artemis
 ```
 - Set credentials in application.properties
 ```
