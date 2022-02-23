@@ -41,6 +41,7 @@
 <!--        <module>kbe-brewery-gateway</module>-->
         <module>kbe-coffeehouse-coffee-service</module>
         <module>kbe-coffeehouse-inventory-service</module>
+        <module>kbe-coffeehouse-inventory-failover</module>
         <module>kbe-coffeehouse-order-service</module>
     </modules>
 

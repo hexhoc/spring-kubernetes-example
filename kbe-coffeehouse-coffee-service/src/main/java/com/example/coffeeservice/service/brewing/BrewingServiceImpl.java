@@ -27,7 +27,6 @@ public class BrewingServiceImpl implements BrewingService {
 
     @Override
     @Transactional
-    @Scheduled(fixedRate = 5000) //run every 5 seconds
     public void checkForLowInventory() {
         log.debug("Checking Coffee Inventory");
 

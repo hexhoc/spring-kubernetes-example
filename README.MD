@@ -8,11 +8,31 @@
 4. Maven 4.0.0
 
 ## INSTALLATION
-### INSTALL POSTGRESQL
+### Install posgtgresql
 1. Create postgresql database with name - postgres.
-2. Configure connection to sql in following modules:
-   - kbe-coffeehouse-coffee-service
-   - 
+
+### Configure artemis
+
+- Get docker image
+```
+docker pull vromero/activemq-artemis
+```
+- Run docker image
+```
+docker run --name activemq-artemis -it --rm -p 8161:8161 -p 61616:61616 vromero/activemq-artemis
+```
+- Set credentials in application.properties
+```
+# defaults for this docker image - vromero/activemq-artemis
+spring.artemis.user=artemis
+spring.artemis.password=simetraehcapa
+```
+
+
+
+
+
+
 
 ### INSTALL KUBERNETES
 
