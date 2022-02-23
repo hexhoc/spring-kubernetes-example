@@ -1,7 +1,6 @@
 package com.example.coffeeservice.service;
 
-import com.example.coffeeservice.model.Coffee;
-import com.example.coffeeservice.model.CoffeePagedList;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

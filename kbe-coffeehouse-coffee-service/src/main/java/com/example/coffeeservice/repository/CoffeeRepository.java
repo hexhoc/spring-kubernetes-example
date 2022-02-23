@@ -16,7 +16,7 @@
  */
 package com.example.coffeeservice.repository;
 
-import com.example.coffeeservice.model.Coffee;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,5 +1,6 @@
-package com.example.coffeeservice.model;
+package com.example.coffeeservice.entity;
 
+import com.example.coffeeservice.model.CoffeeStyleEnum;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;

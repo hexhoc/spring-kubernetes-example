@@ -2,7 +2,7 @@ package com.example.coffeeservice.service.brewing;
 
 import com.example.coffeeservice.config.JmsConfig;
 import com.example.coffeeservice.dto.CoffeeDto;
-import com.example.coffeeservice.model.Coffee;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.events.BrewCoffeeEvent;
 import com.example.coffeeservice.model.events.NewInventoryEvent;
 import com.example.coffeeservice.repository.CoffeeRepository;

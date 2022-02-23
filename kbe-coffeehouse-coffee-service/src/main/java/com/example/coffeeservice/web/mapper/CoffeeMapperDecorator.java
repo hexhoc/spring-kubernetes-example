@@ -1,7 +1,7 @@
 package com.example.coffeeservice.web.mapper;
 
 import com.example.coffeeservice.dto.CoffeeDto;
-import com.example.coffeeservice.model.Coffee;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.service.inventory.CoffeeInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,7 +1,6 @@
 package com.example.coffeeservice.service;
 
-import com.example.coffeeservice.model.Coffee;
-import com.example.coffeeservice.model.CoffeePagedList;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import com.example.coffeeservice.repository.CoffeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

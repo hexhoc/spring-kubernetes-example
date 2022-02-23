@@ -1,7 +1,7 @@
 package com.example.coffeeservice.web.controller;
 
 import com.example.coffeeservice.dto.CoffeeDto;
-import com.example.coffeeservice.model.Coffee;
+import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.CoffeePagedList;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import com.example.coffeeservice.service.CoffeeService;
