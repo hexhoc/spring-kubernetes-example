@@ -54,15 +54,21 @@ public class CoffeeController {
             pageSize = DEFAULT_PAGE_SIZE;
         }
 
-        Page<Coffee> coffeePage = coffeeService.findAll(coffeeName, coffeeStyle, PageRequest.of(pageNumber, pageSize), showInventoryOnHand);
+        Page<Coffee> coffeePage = coffeeService.findAll(
+                coffeeName,
+                coffeeStyle,
+                PageRequest.of(pageNumber, pageSize),
+                showInventoryOnHand);
+
         CoffeePagedList coffeePagedList;
 
         if (showInventoryOnHand) {
-            coffeePagedList = new CoffeePagedList(coffeePage
-                    .getContent()
-                    .stream()
-                    .map(coffeeMapper::coffeeToCoffeeDtoWithInventory)
-                    .collect(Collectors.toList()),
+            coffeePagedList = new CoffeePagedList(
+                    coffeePage
+                            .getContent()
+                            .stream()
+                            .map(coffeeMapper::coffeeToCoffeeDtoWithInventory)
+                            .collect(Collectors.toList()),
                     PageRequest
                             .of(coffeePage.getPageable().getPageNumber(),
                                     coffeePage.getPageable().getPageSize()),
