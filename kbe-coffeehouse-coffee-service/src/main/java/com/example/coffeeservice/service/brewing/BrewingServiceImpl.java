@@ -5,11 +5,10 @@ import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.events.BrewCoffeeEvent;
 import com.example.coffeeservice.repository.CoffeeRepository;
 import com.example.coffeeservice.service.inventory.CoffeeInventoryService;
-import com.example.coffeeservice.web.mapper.CoffeeMapper;
+import com.example.coffeeservice.dto.mapper.CoffeeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

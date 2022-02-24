@@ -20,7 +20,7 @@ public class InventoryHandler {
                 .body(Mono.just(Arrays.asList(
                         CoffeeInventoryDto.builder()
                                 .id(UUID.randomUUID())
-                                .beerId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
+                                .coffeeId(UUID.fromString("00000000-0000-0000-0000-000000000000"))
                                 .quantityOnHand(999)
                                 .createdDate(OffsetDateTime.now())
                                 .lastModifiedDate(OffsetDateTime.now())

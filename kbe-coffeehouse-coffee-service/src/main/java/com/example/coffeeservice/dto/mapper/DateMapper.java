@@ -1,4 +1,4 @@
-package com.example.coffeeservice.web.mapper;
+package com.example.coffeeservice.dto.mapper;
 
 import org.springframework.stereotype.Component;
 

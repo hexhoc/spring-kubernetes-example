@@ -60,7 +60,6 @@
                 <artifactId>spring-statemachine-core</artifactId>
                 <version>${springframework.statemachine.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>

@@ -1,12 +1,14 @@
-package com.example.coffeeservice.web.mapper;
+package com.example.coffeeservice.dto.mapper;
 
 import com.example.coffeeservice.dto.CoffeeDto;
 import com.example.coffeeservice.entity.Coffee;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
-//TODO Research mapstruct
+// Invoke external mappers using uses method in @Mapper annotation,
+// to convert timestamp from Coffee to OffsetDateTime in CoffeeDto
 @Mapper(uses = DateMapper.class)
+// Override mapping logic for coffeeToCoffeeDtoWithInventory method, using Decorator
 @DecoratedWith(CoffeeMapperDecorator.class)
 public interface CoffeeMapper {
 

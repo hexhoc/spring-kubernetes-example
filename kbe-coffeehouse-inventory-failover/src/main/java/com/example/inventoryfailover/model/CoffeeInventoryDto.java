@@ -16,6 +16,6 @@ public class CoffeeInventoryDto {
     private UUID id;
     private OffsetDateTime createdDate;
     private OffsetDateTime lastModifiedDate;
-    private UUID beerId;
+    private UUID coffeeId;
     private Integer quantityOnHand;
 }

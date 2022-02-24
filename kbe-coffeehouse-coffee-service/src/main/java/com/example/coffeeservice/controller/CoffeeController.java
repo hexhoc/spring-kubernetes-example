@@ -1,11 +1,11 @@
-package com.example.coffeeservice.web.controller;
+package com.example.coffeeservice.controller;
 
 import com.example.coffeeservice.dto.CoffeeDto;
 import com.example.coffeeservice.entity.Coffee;
 import com.example.coffeeservice.model.CoffeePagedList;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import com.example.coffeeservice.service.CoffeeService;
-import com.example.coffeeservice.web.mapper.CoffeeMapper;
+import com.example.coffeeservice.dto.mapper.CoffeeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

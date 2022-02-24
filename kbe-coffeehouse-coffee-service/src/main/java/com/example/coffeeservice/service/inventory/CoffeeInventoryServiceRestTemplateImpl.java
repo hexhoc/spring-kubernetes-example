@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-//TODO RESEARCH ALL INVENTORY CLASSES
 @Profile("!local-discovery & !digitalocean")
 @Slf4j
 @ConfigurationProperties(prefix = "custom.coffeehouse", ignoreUnknownFields = true)

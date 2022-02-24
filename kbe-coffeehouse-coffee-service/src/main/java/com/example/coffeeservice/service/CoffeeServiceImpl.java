@@ -10,7 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -32,13 +33,13 @@ public class CoffeeServiceImpl implements CoffeeService{
 
         Page<Coffee> coffeePage;
 
-        if (!StringUtils.isEmpty(coffeeName) && !StringUtils.isEmpty(coffeeStyle)) {
+        if (!ObjectUtils.isEmpty(coffeeName) && !ObjectUtils.isEmpty(coffeeStyle)) {
             //search both
             coffeePage = coffeeRepository.findAllByCoffeeNameAndCoffeeStyle(coffeeName, coffeeStyle, pageRequest);
-        } else if (!StringUtils.isEmpty(coffeeName) && StringUtils.isEmpty(coffeeStyle)) {
+        } else if (!ObjectUtils.isEmpty(coffeeName) && ObjectUtils.isEmpty(coffeeStyle)) {
             //search coffee_service name
             coffeePage = coffeeRepository.findAllByCoffeeName(coffeeName, pageRequest);
-        } else if (StringUtils.isEmpty(coffeeName) && !StringUtils.isEmpty(coffeeStyle)) {
+        } else if (ObjectUtils.isEmpty(coffeeName) && !ObjectUtils.isEmpty(coffeeStyle)) {
             //search coffee_service style
             coffeePage = coffeeRepository.findAllByCoffeeStyle(coffeeStyle, pageRequest);
         } else {
