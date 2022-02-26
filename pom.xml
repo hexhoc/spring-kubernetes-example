@@ -43,6 +43,7 @@
         <module>kbe-coffeehouse-inventory-service</module>
         <module>kbe-coffeehouse-inventory-failover</module>
         <module>kbe-coffeehouse-order-service</module>
+        <module>kbe-coffeehouse-gateway</module>
     </modules>
 
     <dependencyManagement>
