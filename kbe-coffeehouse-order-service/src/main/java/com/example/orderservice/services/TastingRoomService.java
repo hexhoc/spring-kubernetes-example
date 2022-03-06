@@ -28,7 +28,9 @@ public class TastingRoomService {
 
             Customer customer = customerRepository.findByCustomerName(OrderServiceBootstrap.CUSTOMER_NAME).orElseThrow();
 
-            CoffeeOrder coffeeOrder = CoffeeOrder.builder().customer(customer).build();
+            CoffeeOrder coffeeOrder = CoffeeOrder.builder()
+                    .customer(customer)
+                    .build();
 
             CoffeeOrderLine line = CoffeeOrderLine.builder()
                     .coffeeId(coffeeId)

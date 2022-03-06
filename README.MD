@@ -28,13 +28,7 @@ spring.artemis.user=artemis
 spring.artemis.password=simetraehcapa
 ```
 
-
-
-
-
-
-
-### INSTALL KUBERNETES
+### Install kubernetes
 
  1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
  2. Open terminal and check nodes using command - kubectl get nodes
@@ -57,6 +51,36 @@ COFFEE HOUSE SPRING BOOT MICROSERVICES
     Important to understand Coffee Order Service will generate orders, request allocations from inventory (reducing inventory) which triggers Coffee service to brew Coffee (adding to inventory)
 - Data is pesisted to postgreSQL via JPA/Hibernate
 - JMS is used for messaging between services
+
+## INTERACTION OF SERVICES BETWEEN EACH OTHER
+
+### Coffee-service
+
+Every 5 seconds, a scheduled task in **coffee-service** is run that checks the current inventory on hand for all
+coffee (request **inventory-service**), if the inventory on hand <= min inventory, then we send a request to actimeMq to
+brew more coffee. Coffee-service send message to brew coffee in activeMq and then listen that message(**
+BrewCoffeeListener** class), and after get that message from queue start brewing (**BrewingServiceImpl** class)
+
+### Order-service
+
+Every 500 ms running method **createTastingRoomOrder** in **TastingRoomServiceScheduled** class. This method get random
+coffee from **coffee-service**, create new order, create new state machine by current order and start new state machine
+event (**VALIDATE_ORDER**).
+
+State machine has total 5 actions, explore 2 of them:
+
+1. **ValidateCoffeeOrder**. Use JmsTemplate to send message to **VALIDATE_ORDER_QUEUE** and **
+   CoffeeOrderValidationListener** class in **coffee-service** listen this queue.
+
+   If validate is passed, then we send message to **VALIDATE_ORDER_RESULT_QUEUE** and **
+   CoffeeOrderValidationResultListener** class in **order-service** listen this queue.
+
+2. **AllocateCoffeeOrder**. Use JmsTemplate to send message to **ALLOCATE_ORDER_QUEUE** and **AllocationListener** class
+   in **inventory-service** listen this queue.
+
+   If order is allocated normally, then we send message to **ALLOCATE_ORDER_RESULT_QUEUE** and **
+   CoffeeOrderAllocationResultListener** class in **order-service** listen this queue.
+
 
 ## CHANGES FOR KUBERNETES
 
