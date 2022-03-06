@@ -41,10 +41,6 @@ public class CoffeeOrder {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
-    public boolean isNew() {
-        return this.id == null;
-    }
-
     private String customerRef;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -59,4 +55,9 @@ public class CoffeeOrder {
     private CoffeeOrderStatusEnum orderStatus = CoffeeOrderStatusEnum.NEW;
 
     private String orderStatusCallbackUrl;
+
+    public boolean isNew() {
+        return this.id == null;
+    }
+
 }
