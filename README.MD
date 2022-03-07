@@ -8,32 +8,20 @@
 4. Maven 4.0.0
 
 ## INSTALLATION
-### Install posgtgresql
-1. Create postgresql database with name - postgres.
-
-### Configure artemis
-
-- Get docker image
-```
-docker pull vromero/activemq-artemis
-```
-- Run docker image
-```
-docker run --name activemq-artemis -it --rm -p 8161:8161 -p 61616:61616 vromero/activemq-artemis
-```
-- Set credentials in application.properties
-```
-# defaults for this docker image - vromero/activemq-artemis
-spring.artemis.user=artemis
-spring.artemis.password=simetraehcapa
-```
-
 ### Install kubernetes
 
- 1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
- 2. Open terminal and check nodes using command - kubectl get nodes
+1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
+2. Open terminal and check nodes using command - kubectl get nodes
 
-## DEBUG
+### Launch createDockerImages script
+```
+cd docker
+./createDockerImages
+```
+After that, all project automatically compile and create jar and docker image.
+
+
+## REMOTE DOCKER DEBUG
 
 coffee-service.     Port 9080
 inventory-service.  Port 9082
