@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
     db:
         image: postgres
@@ -35,12 +36,34 @@ services:
         ports:
             - 8161:8161
             - 61616:61616
-
-
+    coffee-service:
+        image: example/kbe-coffeehouse-coffee-service
+        ports:
+            - 8080:8080
+            - 9080:9080
+        environment:
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9080
+        depends_on:
+            - inventory
+            - jms
+        restart: on-failure
+        #        environment:
+        #            SPRING_DATASOURCE_USER: root
+        #            SPRING_DATASOURCE_PASSWORD: dbpassword
+        #            SPRING_JPA_HIBERNATE_DDL-AUTO: update
+        #            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/postgres?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+        #            SPRING_ARTEMIS_HOST: jms
+        #            CUSTOM_COFFEEHOUSE_COFFEE-INVENTORY-SERVICE-HOST: http://inventory-service:8082
+        labels:
+            collect_logs_with_filebeat: "true"
+            decode_log_event_to_json_object: "true"
     inventory-service:
-        image: examplecom/kbe-coffeehouse-inventory-service
+        image: example/kbe-coffeehouse-inventory-service
         ports:
             - 8082:8082
+            - 9082:9082
+        environment:
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9082
         depends_on:
             - jms
 #        environment:
@@ -54,31 +77,19 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     inventory-failover:
-        image: examplecom/kbe-coffeehouse-inventory-failover
+        image: example/kbe-coffeehouse-inventory-failover
         ports:
             - 8083:8083
-    coffee-service:
-        image: examplecom/kbe-coffeehouse-coffee-service
-        ports:
-            - 8080:8080
-        depends_on:
-            - inventory
-            - jms
-        restart: on-failure
-#        environment:
-#            SPRING_DATASOURCE_USER: root
-#            SPRING_DATASOURCE_PASSWORD: dbpassword
-#            SPRING_JPA_HIBERNATE_DDL-AUTO: update
-#            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/postgres?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-#            SPRING_ARTEMIS_HOST: jms
-#            CUSTOM_COFFEEHOUSE_COFFEE-INVENTORY-SERVICE-HOST: http://inventory-service:8082
-        labels:
-            collect_logs_with_filebeat: "true"
-            decode_log_event_to_json_object: "true"
+            - 9083:9083
+        environment:
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9083
     order-service:
-        image: examplecom/kbe-coffeehouse-order-service
+        image: example/kbe-coffeehouse-order-service
         ports:
             - 8081:8081
+            - 9081:9081
+        environment:
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9081
         depends_on:
             - coffee-service
             - jms
@@ -94,9 +105,12 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     gateway:
-        image: examplecom/kbe-coffeehouse-gateway
+        image: example/kbe-coffeehouse-gateway
         ports:
             - 9090:9090
+            - 9092:9092
+        environment:
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9092
         depends_on:
             - inventory
             - coffee-service

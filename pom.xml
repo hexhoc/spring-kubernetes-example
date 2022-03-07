@@ -13,7 +13,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>kbe-sb-microservices</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>KBE SB Microservices Parent</name>
 

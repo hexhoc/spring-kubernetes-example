@@ -33,6 +33,14 @@ spring.artemis.password=simetraehcapa
  1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
  2. Open terminal and check nodes using command - kubectl get nodes
 
+## DEBUG
+
+coffee-service.     Port 9080
+inventory-service.  Port 9082
+inventory-failover. Port 9083
+order-service.      Port 9081
+gateway.            Port 9092
+
 ## INTRODUCTION
 
 COFFEE HOUSE SPRING BOOT MICROSERVICES
