@@ -17,6 +17,7 @@ public class CoffeeOrderValidationResultListener {
 
     private final CoffeeOrderManager coffeeOrderManager;
 
+    // Get message from order-service
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESULT_QUEUE)
     public void listen(CoffeeOrderValidationResult result) {
         final UUID coffeeOrderId = result.getCoffeeOrderId();

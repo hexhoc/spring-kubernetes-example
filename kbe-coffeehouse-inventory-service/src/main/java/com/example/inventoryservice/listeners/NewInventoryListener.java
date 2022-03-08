@@ -16,6 +16,7 @@ public class NewInventoryListener {
 
     private final CoffeeInventoryRepository coffeeInventoryRepository;
 
+    // Get message from coffee-service
     @JmsListener(destination = JmsConfig.NEW_INVENTORY_QUEUE)
     public void listen(NewInventoryEvent event){
         log.debug(event.toString());

@@ -23,6 +23,7 @@ public class ValidateCoffeeOrder implements Action<CoffeeOrderStatusEnum, Coffee
     private final JmsTemplate jmsTemplate;
     private final CoffeeOrderMapper coffeeOrderMapper;
 
+    // Send message to coffee-service
     @Override
     public void execute(StateContext<CoffeeOrderStatusEnum, CoffeeOrderEventEnum> stateContext) {
         CoffeeOrder coffeeOrder = stateContext.getStateMachine().getExtendedState()

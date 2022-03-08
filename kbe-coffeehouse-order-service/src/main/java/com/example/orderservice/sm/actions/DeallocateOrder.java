@@ -22,6 +22,7 @@ public class DeallocateOrder implements Action<CoffeeOrderStatusEnum, CoffeeOrde
     private final JmsTemplate jmsTemplate;
     private final CoffeeOrderMapper coffeeOrderMapper;
 
+    // Send message to inventory-service
     @Override
     public void execute(StateContext<CoffeeOrderStatusEnum, CoffeeOrderEventEnum> context) {
         CoffeeOrder coffeeOrder = context.getStateMachine().getExtendedState()

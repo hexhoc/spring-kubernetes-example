@@ -17,6 +17,7 @@ public class CoffeeOrderValidationListener {
     private final CoffeeOrderValidator coffeeOrderValidator;
     private final JmsTemplate jmsTemplate;
 
+    // Get message from order-service and send message back to order-service
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_QUEUE)
     public void listen(ValidateCoffeeOrderRequest event){
 

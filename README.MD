@@ -54,6 +54,28 @@ COFFEE HOUSE SPRING BOOT MICROSERVICES
 
 ## INTERACTION OF SERVICES BETWEEN EACH OTHER
 
+### ActiveMQ queue
+
+**brewing-request** - Coffee-service using this queue to communicate for itself. If we have inventory on hand more than min needed, then we send message to brew that coffee. 
+
+**new-inventory** - coffee-service send, inventory-service listen.  After coffee-service brew new coffee it send message to inventory-service to increase amount of this coffee.
+
+**validate-order** - order-service send, coffee-service listen. order-service create new order and send it to coffee-service to validate it. If all coffee in order founded by upc, then order is validate.
+
+**validate-order-result** - coffee-service send, order-service listen. If the order verification is successful, the coffee-service sends the result back to the order-service.
+
+**allocate-order** - order-service send, inventory-service listen. Performs the shipment of coffee to the customer by order
+
+**allocate-order-result** - inventory-service send, order-service listen. Get result about successfuly allocation.
+
+**allocation-failure** - inventory-service send, order-service listen. Get result about failure allocation.
+
+**deallocate-order** - order-service send, but have not any listener. Needed to fix this
+
+
+****
+
+
 ### Coffee-service
 
 Every 5 seconds, a scheduled task in **coffee-service** is run that checks the current inventory on hand for all

@@ -21,6 +21,8 @@ public class BrewCoffeeListener {
     private final JmsTemplate jmsTemplate;
     private final CoffeeRepository coffeeRepository;
 
+    // Coffee-service get message from it self and send message to inventory-service 
+    // After brew coffee we should increase amount in inventory-service
     @Transactional
     @JmsListener(destination = JmsConfig.BREWING_REQUEST_QUEUE)
     public void listen(BrewCoffeeEvent brewCoffeeEvent){

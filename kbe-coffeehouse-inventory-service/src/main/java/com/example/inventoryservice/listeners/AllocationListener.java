@@ -18,6 +18,7 @@ public class AllocationListener {
     private final AllocationService allocationService;
     private final JmsTemplate jmsTemplate;
 
+    // Get message from order-service and send result back to order-service
     @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_QUEUE)
     public void listen(AllocateCoffeeOrderRequest request){
         log.debug("Allocating Order: " + request.getCoffeeOrder().getId());

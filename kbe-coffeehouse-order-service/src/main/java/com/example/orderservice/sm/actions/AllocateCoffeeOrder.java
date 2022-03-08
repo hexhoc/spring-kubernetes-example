@@ -23,7 +23,7 @@ public class AllocateCoffeeOrder implements Action<CoffeeOrderStatusEnum, Coffee
     private final JmsTemplate jmsTemplate;
     private final CoffeeOrderMapper coffeeOrderMapper;
 
-
+    // Send message to inventory-service
     @Override
     public void execute(StateContext<CoffeeOrderStatusEnum, CoffeeOrderEventEnum> context) {
 
