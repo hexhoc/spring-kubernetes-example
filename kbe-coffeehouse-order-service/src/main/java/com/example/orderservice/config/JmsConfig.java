@@ -1,5 +1,6 @@
 package com.example.orderservice.config;
 
+import com.example.orderservice.services.CustomMessageConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -21,10 +22,9 @@ public class JmsConfig {
 
     @Bean // Serialize message content to json using TextMessage
     public MessageConverter jacksonJmsMessageConverter(ObjectMapper objectMapper) {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT);
-        converter.setTypeIdPropertyName("_type");
+        CustomMessageConverter converter = new CustomMessageConverter();
         converter.setObjectMapper(objectMapper);
+        converter.setTypeIdPropertyName("_type");
         return converter;
     }
 }

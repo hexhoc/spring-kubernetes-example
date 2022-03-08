@@ -24,9 +24,13 @@ After that, all project automatically compile and create jar and docker image.
 ## REMOTE DOCKER DEBUG
 
 coffee-service.     Port 9080
+
 inventory-service.  Port 9082
+
 inventory-failover. Port 9083
+
 order-service.      Port 9081
+
 gateway.            Port 9092
 
 ## INTRODUCTION
