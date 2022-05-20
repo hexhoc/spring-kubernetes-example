@@ -1,5 +1,16 @@
 # SPRING BOOT MICROSERVICES ON KUBERNETES
 
+In this example we're looking at four microservices that worked in orchestration. We can view coffee, add coffee, delete
+coffee, get coffee inventory, brew new coffee, and we can order coffee
+
+Work order: 
+
+1. ```order-service``` is generating orders (scheduled job to order coffee)
+2. This is decrease inventory in ```inventory-service``` if ```inventory-service``` is fail, then we use ```inventory-failover``` 
+3. If inventory is low, then coffee-service is brew new coffee and adding it to inventory
+
+
+
 ## REQUIREMENTS
 
 1. java 17
@@ -7,11 +18,20 @@
 3. Kubernetes
 4. Maven 4.0.0
 
-## INSTALLATION
-### Install kubernetes
+## BUILD
 
-1. Docker desktop. Go to the setting - Kubernetes tab, and enable this options
-2. Open terminal and check nodes using command - kubectl get nodes
+### Build using docker-compose (for local usage)
+1. Open ```./docker``` folder and run command ```sh createDockerImages.sh```
+2. Try to use ```GET http://localhost:9090/api/v1/coffee```
+
+### Build using kubernetes (for prod)
+1. Install kubectl and minikube, and start it ```minikube start```
+2. Check node ```kubectl get nodes``` and context ```kubectl config get-contexts``` should be "minikube"
+3. Run ```minikube dashboard``` and dashboard will open automatically in browser
+
+### Configure elastic, kibana, filebeat
+1. Open kibana ```http://localhost:5601```
+2. Add dashboard for stream with name "filebeat". Kibana discover this stream automatically
 
 ### Launch createDockerImages script
 ```
@@ -21,17 +41,14 @@ cd docker
 After that, all project automatically compile and create jar and docker image.
 
 
-## REMOTE DOCKER DEBUG
-
-coffee-service.     Port 9080
-
-inventory-service.  Port 9082
-
-inventory-failover. Port 9083
-
-order-service.      Port 9081
-
-gateway.            Port 9092
+## SERVICES
+| Services           | port | debug port |
+|--------------------|------|------------|
+| coffee-service     | 8080 | 9080       |
+| inventory-service  | 8082 | 9082       |
+| inventory-failover | 8083 | 9083       |
+| order-service      | 8081 | 9081       |
+| gateway            | 9090 | 9092       |
 
 ## INTRODUCTION
 
