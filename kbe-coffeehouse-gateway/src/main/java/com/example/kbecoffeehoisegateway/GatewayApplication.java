@@ -17,7 +17,7 @@ public class GatewayApplication {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 
         return builder.routes()
-                .route("coffee-service", r -> r.path("/api/v1/coffee/*", "/api/v1/coffeeUpc/*")
+                .route("coffee-service", r -> r.path("/api/v1/coffee","/api/v1/coffee/*", "/api/v1/coffeeUpc/*")
                         .uri("http://coffee-service:8080"))
                 .route("inventory-service", r -> r.path("/api/v1/coffee/*/inventory")
                         .uri("http://inventory-service:8082"))

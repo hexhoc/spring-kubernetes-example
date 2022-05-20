@@ -11,14 +11,14 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
     elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.2.0
         container_name: elasticsearch
         ports:
             - 9200:9200
         environment:
             discovery.type: single-node
     kibana:
-        image: docker.elastic.co/kibana/kibana:7.12.1
+        image: docker.elastic.co/kibana/kibana:8.2.0
         container_name: kibana
         ports:
             - 5601:5601
@@ -43,7 +43,7 @@ services:
             - 8161:8161
             - 61616:61616
     coffee-service:
-        image: example/kbe-coffeehouse-coffee-service
+        image: example/kbe-coffeehouse-coffee-service-1.0
         container_name: coffee-service
         ports:
             - 8080:8080
@@ -52,14 +52,14 @@ services:
             - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9080
             - SPRING_PROFILES_ACTIVE=docker
         depends_on:
-            - inventory
+            - inventory-service
             - jms
         restart: on-failure
         labels:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     inventory-service:
-        image: example/kbe-coffeehouse-inventory-service
+        image: example/kbe-coffeehouse-inventory-service-1.0
         container_name: inventory-service
         ports:
             - 8082:8082
@@ -74,7 +74,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     inventory-failover:
-        image: example/kbe-coffeehouse-inventory-failover
+        image: example/kbe-coffeehouse-inventory-failover-1.0
         container_name: inventory-failover
         ports:
             - 8083:8083
@@ -82,7 +82,7 @@ services:
         environment:
             - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9083
     order-service:
-        image: example/kbe-coffeehouse-order-service
+        image: example/kbe-coffeehouse-order-service-1.0
         container_name: order-service
         ports:
             - 8081:8081
@@ -98,7 +98,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     gateway:
-        image: example/kbe-coffeehouse-gateway
+        image: example/kbe-coffeehouse-gateway-1.0
         container_name: gateway
         ports:
             - 9090:9090
@@ -106,7 +106,7 @@ services:
         environment:
             - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9092
         depends_on:
-            - inventory
+            - inventory-service
             - coffee-service
             - order-service
             - inventory-failover
