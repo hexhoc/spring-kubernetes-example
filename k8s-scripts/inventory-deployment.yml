@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: inventory-service
+  name: inventory-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-service
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: inventory-service
+    spec:
+      containers:
+      - image: hexhoc/kbe-coffeehouse-inventory-service
+        name: kbe-coffeehouse-inventory-service
+        resources: {}
+        env: 
+          - name: JAVA_TOOL_OPTIONS
+            value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9082
+          - name: SPRING_PROFILES_ACTIVE
+            value: docker
+status: {}

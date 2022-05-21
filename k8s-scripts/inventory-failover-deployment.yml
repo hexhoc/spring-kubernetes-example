@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: inventory-failover
+  name: inventory-failover
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-failover
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: inventory-failover
+    spec:
+      containers:
+      - image: hexhoc/kbe-coffeehouse-inventory-failover
+        name: kbe-coffeehouse-inventory-failover
+        resources: {}
+        env: 
+          - name: JAVA_TOOL_OPTIONS
+            value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9083
+
+status: {}
