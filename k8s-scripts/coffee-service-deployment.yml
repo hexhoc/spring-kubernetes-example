@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: coffee-service
+  name: coffee-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coffee-service
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: coffee-service
+    spec:
+      containers:
+      - image: hexhoc/kbe-coffeehouse-coffee-service
+        name: kbe-coffeehouse-coffee-service
+        resources: {}
+        env: 
+          - name: JAVA_TOOL_OPTIONS
+            value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9080
+          - name: SPRING_PROFILES_ACTIVE
+            value: docker
+status: {}
