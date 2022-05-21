@@ -3,7 +3,7 @@ version: '3.8'
 services:
     db:
         image: postgres
-        container_name: postgres-prod
+        container_name: postgres
         ports:
             - "5432:5432"
         environment:
@@ -45,7 +45,7 @@ services:
             - 8161:8161
             - 61616:61616
     coffee-service:
-        image: example/kbe-coffeehouse-coffee-service-1.0
+        image: hexhoc/kbe-coffeehouse-coffee-service-1.0
         container_name: coffee-service
         ports:
             - 8080:8080
@@ -61,7 +61,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     inventory-service:
-        image: example/kbe-coffeehouse-inventory-service-1.0
+        image: hexhoc/kbe-coffeehouse-inventory-service-1.0
         container_name: inventory-service
         ports:
             - 8082:8082
@@ -76,7 +76,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     inventory-failover:
-        image: example/kbe-coffeehouse-inventory-failover-1.0
+        image: hexhoc/kbe-coffeehouse-inventory-failover-1.0
         container_name: inventory-failover
         ports:
             - 8083:8083
@@ -84,7 +84,7 @@ services:
         environment:
             - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9083
     order-service:
-        image: example/kbe-coffeehouse-order-service-1.0
+        image: hexhoc/kbe-coffeehouse-order-service-1.0
         container_name: order-service
         ports:
             - 8081:8081
@@ -100,7 +100,7 @@ services:
             collect_logs_with_filebeat: "true"
             decode_log_event_to_json_object: "true"
     gateway:
-        image: example/kbe-coffeehouse-gateway-1.0
+        image: hexhoc/kbe-coffeehouse-gateway-1.0
         container_name: gateway
         ports:
             - 9090:9090

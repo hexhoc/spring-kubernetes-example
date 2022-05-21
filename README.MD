@@ -175,8 +175,25 @@ Filebeat collect console logs from every services and shipping it to elastic. Ki
 
     ```kubectl apply -f jms-service.yml```
 
-3. 
+3. Inventory-service
 
+    ```kubectl create deployment inventory-service --image=hexhoc/kbe-coffeehouse-inventory-service --dry-run=client -o=yaml > inventory-deployment.yml```
+
+    ```kubectl apply -f inventory-deployment.yml```
+
+    ```kubectl create service clusterip inventory-service --tcp=8082:8082 --dry-run=client -o=yaml > inventory-service.yml```
+
+    ```kubectl apply -f inventory-service.yml```
+
+4. Inventory-failover-service
+
+    ```kubectl create deployment inventory-failover --image=hexhoc/kbe-coffeehouse-inventory-failover --dry-run=client -o=yaml > inventory-failover-deployment.yml```
+
+    ```kubectl apply -f inventory-failover-deployment.yml```
+
+    ```kubectl create service clusterip inventory-failover --tcp=8083:8083 --dry-run=client -o=yaml > inventory-failover-service.yml```
+
+    ```kubectl apply -f inventory-failover-service.yml```
 10. Check all deployment and services
 
     ```kubectl get all```
