@@ -97,6 +97,21 @@ State machine has total 5 actions, explore 2 of them:
 1. Install kubectl and minikube, and start it ```minikube start```
 2. Check node ```kubectl get nodes``` and context ```kubectl config get-contexts``` should be "minikube"
 3. Run ```minikube dashboard``` and dashboard will open automatically in browser
+4. Apply that commands:
+    ```
+    kubectl apply -f postgres-deployment.yml
+    kubectl apply -f postgres-service.yml
+    kubectl apply -f jms-deployment.yml
+    kubectl apply -f jms-service.yml
+    kubectl apply -f inventory-deployment.yml
+    kubectl apply -f inventory-service.yml
+    kubectl apply -f inventory-failover-deployment.yml
+    kubectl apply -f inventory-failover-service.yml
+    kubectl apply -f coffee-service-deployment.yml
+    kubectl apply -f coffee-service.yml
+    kubectl apply -f order-service-deployment.yml
+    kubectl apply -f order-service.yml
+    ```
 
 ### Configure elastic, kibana, filebeat
 1. Open kibana ```http://localhost:5601```
