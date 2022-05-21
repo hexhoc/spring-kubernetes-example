@@ -26,4 +26,12 @@ spec:
             value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9082
           - name: SPRING_PROFILES_ACTIVE
             value: docker
+        readinessProbe:
+          httpGet:
+            port: 8082
+            path: /actuator/health/readiness
+        livenessProbe:
+          httpGet:
+            port: 8082
+            path: /actuator/health/liveness
 status: {}
