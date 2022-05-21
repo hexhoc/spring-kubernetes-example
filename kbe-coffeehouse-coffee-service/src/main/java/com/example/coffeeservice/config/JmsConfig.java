@@ -1,6 +1,5 @@
 package com.example.coffeeservice.config;
 
-import com.example.coffeeservice.service.CustomMessageConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +18,11 @@ public class JmsConfig  {
     public static final String VALIDATE_ORDER_RESULT_QUEUE = "validate-order-result";
 
     @Bean // Serialize message content to json using TextMessage
-    public MessageConverter customJmsMessageConverter(ObjectMapper objectMapper) {
-        CustomMessageConverter converter = new CustomMessageConverter();
-        converter.setObjectMapper(objectMapper);
+    public MessageConverter jacksonJmsMessageConverter(ObjectMapper objectMapper) {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
+        converter.setObjectMapper(objectMapper);
         return converter;
     }
 }

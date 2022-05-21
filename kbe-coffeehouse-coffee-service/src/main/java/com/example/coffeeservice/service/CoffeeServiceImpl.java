@@ -1,6 +1,9 @@
 package com.example.coffeeservice.service;
 
+import com.example.coffeeservice.dto.CoffeeDto;
+import com.example.coffeeservice.dto.mapper.CoffeeMapper;
 import com.example.coffeeservice.entity.Coffee;
+import com.example.coffeeservice.model.CoffeePagedList;
 import com.example.coffeeservice.model.CoffeeStyleEnum;
 import com.example.coffeeservice.repository.CoffeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,74 +13,102 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CoffeeServiceImpl implements CoffeeService{
+public class CoffeeServiceImpl implements CoffeeService {
 
     private final CoffeeRepository coffeeRepository;
+    private final CoffeeMapper coffeeMapper;
 
     @Cacheable(cacheNames = "coffeeListCache", condition = "#showInventoryOnHand == false ")
     @Override
-    public Page<Coffee> findAll(String coffeeName, CoffeeStyleEnum coffeeStyle, PageRequest pageRequest, Boolean showInventoryOnHand) {
-        //TODO remake this method using JpaSpecification
+    public CoffeePagedList listCoffee(String coffeeName, CoffeeStyleEnum coffeeStyle, PageRequest pageRequest, Boolean showInventoryOnHand) {
 
-        log.debug("Listing coffee");
+        log.debug("Listing Coffee");
 
+        CoffeePagedList coffeePagedList;
         Page<Coffee> coffeePage;
 
-        if (!ObjectUtils.isEmpty(coffeeName) && !ObjectUtils.isEmpty(coffeeStyle)) {
+        if (!StringUtils.isEmpty(coffeeName) && !StringUtils.isEmpty(coffeeStyle)) {
             //search both
             coffeePage = coffeeRepository.findAllByCoffeeNameAndCoffeeStyle(coffeeName, coffeeStyle, pageRequest);
-        } else if (!ObjectUtils.isEmpty(coffeeName) && ObjectUtils.isEmpty(coffeeStyle)) {
+        } else if (!StringUtils.isEmpty(coffeeName) && StringUtils.isEmpty(coffeeStyle)) {
             //search coffee_service name
             coffeePage = coffeeRepository.findAllByCoffeeName(coffeeName, pageRequest);
-        } else if (ObjectUtils.isEmpty(coffeeName) && !ObjectUtils.isEmpty(coffeeStyle)) {
+        } else if (StringUtils.isEmpty(coffeeName) && !StringUtils.isEmpty(coffeeStyle)) {
             //search coffee_service style
             coffeePage = coffeeRepository.findAllByCoffeeStyle(coffeeStyle, pageRequest);
         } else {
             coffeePage = coffeeRepository.findAll(pageRequest);
         }
 
-        return coffeePage;
+        if (showInventoryOnHand) {
+            coffeePagedList = new CoffeePagedList(coffeePage
+                    .getContent()
+                    .stream()
+                    .map(coffeeMapper::coffeeToCoffeeDtoWithInventory)
+                    .collect(Collectors.toList()),
+                    PageRequest
+                            .of(coffeePage.getPageable().getPageNumber(),
+                                    coffeePage.getPageable().getPageSize()),
+                    coffeePage.getTotalElements());
+
+        } else {
+            coffeePagedList = new CoffeePagedList(coffeePage
+                    .getContent()
+                    .stream()
+                    .map(coffeeMapper::coffeeToCoffeeDto)
+                    .collect(Collectors.toList()),
+                    PageRequest
+                            .of(coffeePage.getPageable().getPageNumber(),
+                                    coffeePage.getPageable().getPageSize()),
+                    coffeePage.getTotalElements());
+        }
+        return coffeePagedList;
     }
 
     @Cacheable(cacheNames = "coffeeCache", key = "#coffeeId", condition = "#showInventoryOnHand == false ")
     @Override
-    public Coffee findById(UUID coffeeId, Boolean showInventoryOnHand) {
-        log.debug("Finding coffee by id: " + coffeeId);
+    public CoffeeDto findCoffeeById(UUID coffeeId, Boolean showInventoryOnHand) {
+
+        log.debug("Finding Coffee by id: " + coffeeId);
 
         Optional<Coffee> coffeeOptional = coffeeRepository.findById(coffeeId);
 
         if (coffeeOptional.isPresent()) {
             log.debug("Found CoffeeId: " + coffeeId);
-            return coffeeOptional.get();
+            if(showInventoryOnHand) {
+                return coffeeMapper.coffeeToCoffeeDtoWithInventory(coffeeOptional.get());
+            } else {
+                return coffeeMapper.coffeeToCoffeeDto(coffeeOptional.get());
+            }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found. UUID: " + coffeeId);
         }
     }
 
     @Override
-    public Coffee save(Coffee coffee) {
-        return coffeeRepository.save(coffee);
+    public CoffeeDto saveCoffee(CoffeeDto coffeeDto) {
+        return coffeeMapper.coffeeToCoffeeDto(coffeeRepository.save(coffeeMapper.coffeeDtoToCoffee(coffeeDto)));
     }
 
     @Override
-    public void update(UUID coffeeId, Coffee changedCoffee) {
+    public void updateCoffee(UUID coffeeId, CoffeeDto coffeeDto) {
         Optional<Coffee> coffeeOptional = coffeeRepository.findById(coffeeId);
 
         coffeeOptional.ifPresentOrElse(coffee -> {
-            coffee.setCoffeeName(changedCoffee.getCoffeeName());
-            coffee.setCoffeeStyle(changedCoffee.getCoffeeStyle());
-            coffee.setPrice(changedCoffee.getPrice());
-            coffee.setUpc(changedCoffee.getUpc());
+            coffee.setCoffeeName(coffeeDto.getCoffeeName());
+            coffee.setCoffeeStyle(coffeeDto.getCoffeeStyle());
+            coffee.setPrice(coffeeDto.getPrice());
+            coffee.setUpc(coffeeDto.getUpc());
             coffeeRepository.save(coffee);
         }, () -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found. UUID: " + coffeeId);
@@ -89,8 +120,9 @@ public class CoffeeServiceImpl implements CoffeeService{
         coffeeRepository.deleteById(coffeeId);
     }
 
+    @Cacheable(cacheNames = "coffeeUpcCache")
     @Override
-    public Coffee findByUpc(String upc) {
-        return coffeeRepository.findByUpc(upc);
+    public CoffeeDto findCoffeeByUpc(String upc) {
+        return coffeeMapper.coffeeToCoffeeDto(coffeeRepository.findByUpc(upc));
     }
 }

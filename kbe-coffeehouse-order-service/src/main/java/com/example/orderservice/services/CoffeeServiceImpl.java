@@ -35,7 +35,7 @@ public class CoffeeServiceImpl implements CoffeeService {
     }
 
     @Override
-    public Optional<CoffeePagedList> getListofCoffees() {
+    public Optional<CoffeePagedList> getListofCoffee() {
         return Optional.ofNullable(restTemplate.getForObject(coffeeServiceHost + COFFEE_PATH_V1, CoffeePagedList.class));
     }
 

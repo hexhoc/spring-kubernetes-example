@@ -16,7 +16,7 @@ public class BrewingServiceScheduled {
 
     @Scheduled(fixedRate = 5000) //run every 5 seconds
     public void checkForLowInventory() {
-        log.debug("Start sheduled check for low inventory");
+        log.debug("Start scheduled check for low inventory");
         brewingService.checkForLowInventory();
     }
 }

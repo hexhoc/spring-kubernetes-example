@@ -11,5 +11,5 @@ public interface CoffeeService {
 
     Optional<CoffeeDto> getCoffeeByUpc(String upc);
 
-    Optional<CoffeePagedList> getListofCoffees();
+    Optional<CoffeePagedList> getListofCoffee();
 }

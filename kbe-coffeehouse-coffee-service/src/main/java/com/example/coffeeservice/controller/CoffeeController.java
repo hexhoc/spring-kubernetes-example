@@ -27,20 +27,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/")
 @RestController
 public class CoffeeController {
+
     private static final Integer DEFAULT_PAGE_NUMBER = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
 
     private final CoffeeService coffeeService;
-    private final CoffeeMapper coffeeMapper;
 
     @GetMapping(produces = { "application/json" }, path = "coffee")
     public ResponseEntity<CoffeePagedList> listCoffee(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                                     @RequestParam(value = "coffeeName", required = false) String coffeeName,
-                                                     @RequestParam(value = "coffeeStyle", required = false) CoffeeStyleEnum coffeeStyle,
-                                                     @RequestParam(value = "showInventoryOnHand", required = false) Boolean showInventoryOnHand){
+                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                   @RequestParam(value = "coffeeName", required = false) String coffeeName,
+                                                   @RequestParam(value = "coffeeStyle", required = false) CoffeeStyleEnum coffeeStyle,
+                                                   @RequestParam(value = "showInventoryOnHand", required = false) Boolean showInventoryOnHand){
 
-        log.debug("Listing Coffees");
+        log.debug("Listing Coffee");
 
         if (showInventoryOnHand == null) {
             showInventoryOnHand = false;
@@ -54,44 +54,18 @@ public class CoffeeController {
             pageSize = DEFAULT_PAGE_SIZE;
         }
 
-        Page<Coffee> coffeePage = coffeeService.findAll(
+        CoffeePagedList coffeeList = coffeeService.listCoffee(
                 coffeeName,
                 coffeeStyle,
                 PageRequest.of(pageNumber, pageSize),
                 showInventoryOnHand);
 
-        CoffeePagedList coffeePagedList;
-
-        if (showInventoryOnHand) {
-            coffeePagedList = new CoffeePagedList(
-                    coffeePage
-                            .getContent()
-                            .stream()
-                            .map(coffeeMapper::coffeeToCoffeeDtoWithInventory)
-                            .collect(Collectors.toList()),
-                    PageRequest
-                            .of(coffeePage.getPageable().getPageNumber(),
-                                    coffeePage.getPageable().getPageSize()),
-                    coffeePage.getTotalElements());
-
-        } else {
-            coffeePagedList = new CoffeePagedList(coffeePage
-                    .getContent()
-                    .stream()
-                    .map(coffeeMapper::coffeeToCoffeeDto)
-                    .collect(Collectors.toList()),
-                    PageRequest
-                            .of(coffeePage.getPageable().getPageNumber(),
-                                    coffeePage.getPageable().getPageSize()),
-                    coffeePage.getTotalElements());
-        }
-
-        return new ResponseEntity<>(coffeePagedList, HttpStatus.OK);
+        return new ResponseEntity<>(coffeeList, HttpStatus.OK);
     }
 
     @GetMapping(path = {"coffee/{coffeeId}"}, produces = { "application/json" })
-    public ResponseEntity<CoffeeDto> getCoffeeById(@PathVariable("coffeeId") UUID coffeeId,
-                                                  @RequestParam(value = "showInventoryOnHand", required = false) Boolean showInventoryOnHand){
+    public ResponseEntity<CoffeeDto>  getCoffeeById(@PathVariable("coffeeId") UUID coffeeId,
+                                                @RequestParam(value = "showInventoryOnHand", required = false) Boolean showInventoryOnHand){
 
         log.debug("Get Request for CoffeeId: " + coffeeId);
 
@@ -99,31 +73,23 @@ public class CoffeeController {
             showInventoryOnHand = false;
         }
 
-        CoffeeDto coffeeDto;
-        Coffee coffee = coffeeService.findById(coffeeId, showInventoryOnHand);
-        if(showInventoryOnHand) {
-            coffeeDto = coffeeMapper.coffeeToCoffeeDtoWithInventory(coffee);
-        } else {
-            coffeeDto = coffeeMapper.coffeeToCoffeeDto(coffee);
-        }
-
-        return new ResponseEntity<>(coffeeDto, HttpStatus.OK);
+        return new ResponseEntity<>(coffeeService.findCoffeeById(coffeeId, showInventoryOnHand), HttpStatus.OK);
     }
 
     @GetMapping(path = {"coffeeUpc/{upc}"}, produces = { "application/json" })
     public ResponseEntity<CoffeeDto>  getCoffeeByUpc(@PathVariable("upc") String upc){
-        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeDto(coffeeService.findByUpc(upc)), HttpStatus.OK);
+        return new ResponseEntity<>(coffeeService.findCoffeeByUpc(upc), HttpStatus.OK);
     }
 
     @PostMapping(path = "coffee")
     public ResponseEntity saveNewCoffee(@Valid @RequestBody CoffeeDto coffeeDto){
 
-        Coffee coffee = coffeeService.save(coffeeMapper.coffeeDtoToCoffee(coffeeDto));
+        CoffeeDto savedDto = coffeeService.saveCoffee(coffeeDto);
 
         HttpHeaders httpHeaders = new HttpHeaders();
 
         //todo hostname for uri
-        httpHeaders.add("Location", "/api/v1/coffee_service/" + coffee.getId().toString());
+        httpHeaders.add("Location", "/api/v1/coffee_service/" + savedDto.getId().toString());
 
         return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
     }
@@ -131,7 +97,7 @@ public class CoffeeController {
     @PutMapping(path = {"coffee/{coffeeId}"}, produces = { "application/json" })
     public ResponseEntity updateCoffee(@PathVariable("coffeeId") UUID coffeeId, @Valid @RequestBody CoffeeDto coffeeDto){
 
-        coffeeService.update(coffeeId, coffeeMapper.coffeeDtoToCoffee(coffeeDto));
+        coffeeService.updateCoffee(coffeeId, coffeeDto);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -144,7 +110,7 @@ public class CoffeeController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<List> badRequestHandler(ConstraintViolationException e){
+    ResponseEntity<List> badReqeustHandler(ConstraintViolationException e){
         List<String> errors = new ArrayList<>(e.getConstraintViolations().size());
 
         e.getConstraintViolations().forEach(constraintViolation -> {

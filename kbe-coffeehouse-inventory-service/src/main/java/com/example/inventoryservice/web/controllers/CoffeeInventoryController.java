@@ -22,7 +22,7 @@ public class CoffeeInventoryController {
     private final CoffeeInventoryMapper coffeeInventoryMapper;
 
     @GetMapping("api/v1/coffee/{coffeeId}/inventory")
-    List<CoffeeInventoryDto> listCoffeesById(@PathVariable UUID coffeeId){
+    List<CoffeeInventoryDto> listCoffeeById(@PathVariable UUID coffeeId){
         log.debug("Finding Inventory for coffeeId:" + coffeeId);
 
         return coffeeInventoryRepository.findAllByCoffeeId(coffeeId)

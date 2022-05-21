@@ -49,7 +49,7 @@ public class TastingRoomService {
 
     private Optional<UUID> getRandomCoffee(){
 
-        Optional<CoffeePagedList> listOptional = coffeeService.getListofCoffees();
+        Optional<CoffeePagedList> listOptional = coffeeService.getListofCoffee();
 
         if (listOptional.isPresent()) {
             CoffeePagedList coffeePagedList = listOptional.get();

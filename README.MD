@@ -8,13 +8,13 @@ COFFEE HOUSE SPRING BOOT MICROSERVICES
 	- Rest API used to get inventory information
 	- JMS messaging used to increase inventory from brewing, decrease inventory froom order allocation
   **Coffee Inventory Failover Service** - Service to provide a positive response if inventory service is not avaible.
-  - **Coffee service** - holds information about Coffees brewed, Rest API for Coffee CRUD opearations.
+  - **Coffee service** - holds information about Coffee brewed, Rest API for Coffee CRUD opearations.
 	- JMS messaging to brew Coffee when inventory is low
 	- Scheduled job to brew Coffee
   - **Coffee order service** - Holds information about veer orders
 	- RestAPI for Coffee order Operations
 	- JMS Messaging to allocate Coffee orders
-	- Tasting room service - sheduled job to order Coffees, which decreases inventory, which triggers brewing.
+	- Tasting room service - sheduled job to order Coffee, which decreases inventory, which triggers brewing.
     Important to understand Coffee Order Service will generate orders, request allocations from inventory (reducing inventory) which triggers Coffee service to brew Coffee (adding to inventory)
 - Data is pesisted to postgreSQL via JPA/Hibernate
 - JMS is used for messaging between services
@@ -32,52 +32,58 @@ Work order:
 
 ### ActiveMQ queue
 
-**brewing-request** - Coffee-service using this queue to communicate for itself. If we have inventory on hand more than min needed, then we send message to brew that coffee. 
+1. **brewing-request** - **coffee-service** send message every 5 second  itself listen message.
 
-**new-inventory** - coffee-service send, inventory-service listen.  After coffee-service brew new coffee it send message to inventory-service to increase amount of this coffee.
+    If we have inventory on hand more than min needed, then we send message to brew that coffee. 
 
-**validate-order** - order-service send, coffee-service listen. order-service create new order and send it to coffee-service to validate it. If all coffee in order founded by upc, then order is validate.
+2. **new-inventory** - **coffee-service** send, **inventory-service** listen. 
 
-**validate-order-result** - coffee-service send, order-service listen. If the order verification is successful, the coffee-service sends the result back to the order-service.
+    After **coffee-service** brew new coffee it sends message to **inventory-service** to increase amount of this coffee.
 
-**allocate-order** - order-service send, inventory-service listen. Performs the shipment of coffee to the customer by order
+3. **validate-order** - **order-service** send, **coffee-service** listen. 
 
-**allocate-order-result** - inventory-service send, order-service listen. Get result about successfuly allocation.
+    **order-service** create new order and send it to **coffee-service** to validate it. If all coffee in order founded by upc, then order is validate.
 
-**allocation-failure** - inventory-service send, order-service listen. Get result about failure allocation.
+4. **validate-order-result** - **coffee-service** send, **order-service** listen. 
 
-**deallocate-order** - order-service send, but have not any listener. Needed to fix this
+    If the order verification is successful, the **coffee-service** sends the result back to the **order-service**.
+
+5. **allocate-order** - **order-service** send, **inventory-service** listen. 
+
+    Performs the shipment of coffee to the customer by order
+
+6. **allocate-order-result** - **inventory-service** send, **order-service** listen. 
+
+    Get result about successfully allocation.
+
+7. **allocation-failure** - **inventory-service** send, **order-service** listen. 
+
+    Get result about failure allocation.
+
+8. **deallocate-order** - **order-service** send, but have not any listener. 
+
+    Needed to fix this
 
 
-****
+## SCHEDULED JOBS
 
+### Check for low inventory (coffee-service, every 5 seconds)
+1. **coffee-service** check the current inventory on hand for all coffee (**brewingService.checkForLowInventory()**). 
+2. **coffee-service** Send rest api request to **inventory-service**, and get quantity on hand.
+3. **coffee-service** if the inventory on hand <= min inventory, **coffee-service** send message to brew more coffee in queue **brewing-request**
+4. **coffee-service** listen queue (**BrewCoffeeListener**. After get that message **coffee-service** begin brew coffee, increase quantity.
+5. **coffee-service** send new quantity in queue **new-inventory**
+6. **inventory-service** listen queue **new-inventory**. Get new inventory object (coffee id with quantity) and save it in db (table **coffee_inventory**)
 
-### Coffee-service
-
-Every 5 seconds, a scheduled task in **coffee-service** is run that checks the current inventory on hand for all
-coffee (request **inventory-service**), if the inventory on hand <= min inventory, then we send a request to actimeMq to
-brew more coffee. Coffee-service send message to brew coffee in activeMq and then listen that message(**
-BrewCoffeeListener** class), and after get that message from queue start brewing (**BrewingServiceImpl** class)
-
-### Order-service
-
-Every 500 ms running method **createTastingRoomOrder** in **TastingRoomServiceScheduled** class. This method get random
-coffee from **coffee-service**, create new order, create new state machine by current order and start new state machine
-event (**VALIDATE_ORDER**).
-
-State machine has total 5 actions, explore 2 of them:
-
-1. **ValidateCoffeeOrder**. Use JmsTemplate to send message to **VALIDATE_ORDER_QUEUE** and **
-   CoffeeOrderValidationListener** class in **coffee-service** listen this queue.
-
-   If validate is passed, then we send message to **VALIDATE_ORDER_RESULT_QUEUE** and **
-   CoffeeOrderValidationResultListener** class in **order-service** listen this queue.
-
-2. **AllocateCoffeeOrder**. Use JmsTemplate to send message to **ALLOCATE_ORDER_QUEUE** and **AllocationListener** class
-   in **inventory-service** listen this queue.
-
-   If order is allocated normally, then we send message to **ALLOCATE_ORDER_RESULT_QUEUE** and **
-   CoffeeOrderAllocationResultListener** class in **order-service** listen this queue.
+### 2. Create tasting room order (order-service, every 500 ms)
+1. **order-service** create new order with random coffee. **tastingRoomService.createTastingRoomOrder()**. Set order status = NEW
+2. **order-service** send event to state machine. **CoffeeOrderManagerImpl.sendCoffeeOrderEvent()**
+3. **order-service** state machine start event action in **ValidateCoffeeOrder.execute()** and send order to queue **validate-order**
+4. **coffee-service** **CoffeeOrderValidationListener.listen()** listen queue **validate-order** and send message to queue **validate-order-result**
+5. **order-service** listen queue **validate-order-result** (**CoffeeOrderValidationResultListener.listen()**) change order status from PENDING_VALIDATION to VALIDATED. 
+6. **order-service** state machine start event action ALLOCATE_ORDER (**AllocateCoffeeOrder.execute()**) and send message (order) to queue **allocate-order**
+7. **inventory-service** listen queue **allocate-order** in **AllocationListener.listen()** and check whether there are enough quantity to allocate an order or not and send result to queue **allocate-order-result**
+8. **order-service** state machine set status ALLOCATED and save order to DB.
 
 
 ## REQUIREMENTS
