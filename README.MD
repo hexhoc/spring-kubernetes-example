@@ -1,55 +1,5 @@
 # SPRING BOOT MICROSERVICES ON KUBERNETES
 
-In this example we're looking at four microservices that worked in orchestration. We can view coffee, add coffee, delete
-coffee, get coffee inventory, brew new coffee, and we can order coffee
-
-Work order: 
-
-1. ```order-service``` is generating orders (scheduled job to order coffee)
-2. This is decrease inventory in ```inventory-service``` if ```inventory-service``` is fail, then we use ```inventory-failover``` 
-3. If inventory is low, then coffee-service is brew new coffee and adding it to inventory
-
-
-
-## REQUIREMENTS
-
-1. java 17
-2. Docker
-3. Kubernetes
-4. Maven 4.0.0
-
-## BUILD
-
-### Build using docker-compose (for local usage)
-1. Open ```./docker``` folder and run command ```sh createDockerImages.sh```
-2. Try to use ```GET http://localhost:9090/api/v1/coffee```
-
-### Build using kubernetes (for prod)
-1. Install kubectl and minikube, and start it ```minikube start```
-2. Check node ```kubectl get nodes``` and context ```kubectl config get-contexts``` should be "minikube"
-3. Run ```minikube dashboard``` and dashboard will open automatically in browser
-
-### Configure elastic, kibana, filebeat
-1. Open kibana ```http://localhost:5601```
-2. Add dashboard for stream with name "filebeat". Kibana discover this stream automatically
-
-### Launch createDockerImages script
-```
-cd docker
-./createDockerImages
-```
-After that, all project automatically compile and create jar and docker image.
-
-
-## SERVICES
-| Services           | port | debug port |
-|--------------------|------|------------|
-| coffee-service     | 8080 | 9080       |
-| inventory-service  | 8082 | 9082       |
-| inventory-failover | 8083 | 9083       |
-| order-service      | 8081 | 9081       |
-| gateway            | 9090 | 9092       |
-
 ## INTRODUCTION
 
 COFFEE HOUSE SPRING BOOT MICROSERVICES
@@ -68,6 +18,15 @@ COFFEE HOUSE SPRING BOOT MICROSERVICES
     Important to understand Coffee Order Service will generate orders, request allocations from inventory (reducing inventory) which triggers Coffee service to brew Coffee (adding to inventory)
 - Data is pesisted to postgreSQL via JPA/Hibernate
 - JMS is used for messaging between services
+
+In this example we're looking at four microservices that worked in orchestration. We can view coffee, add coffee, delete
+coffee, get coffee inventory, brew new coffee, and we can order coffee
+
+Work order: 
+
+1. ```order-service``` is generating orders (scheduled job to order coffee)
+2. This is decrease inventory in ```inventory-service``` if ```inventory-service``` is fail, then we use ```inventory-failover``` 
+3. If inventory is low, then coffee-service is brew new coffee and adding it to inventory
 
 ## INTERACTION OF SERVICES BETWEEN EACH OTHER
 
@@ -121,9 +80,45 @@ State machine has total 5 actions, explore 2 of them:
    CoffeeOrderAllocationResultListener** class in **order-service** listen this queue.
 
 
+## REQUIREMENTS
+
+1. java 17
+2. Docker
+3. Kubernetes
+4. Maven 4.0.0
+
+## BUILD
+
+### Build using docker-compose (for local usage)
+1. Open ```./docker``` folder and run command ```sh createDockerImages.sh```
+2. Try to use ```GET http://localhost:9090/api/v1/coffee```
+
+### Build using kubernetes (for prod)
+1. Install kubectl and minikube, and start it ```minikube start```
+2. Check node ```kubectl get nodes``` and context ```kubectl config get-contexts``` should be "minikube"
+3. Run ```minikube dashboard``` and dashboard will open automatically in browser
+
+### Configure elastic, kibana, filebeat
+1. Open kibana ```http://localhost:5601```
+2. Add dashboard for stream with name "filebeat". Kibana discover this stream automatically
+
+Filebeat collect console logs from every services and shipping it to elastic. Kibana check elastic and get all logs
+
+
+
+## SERVICES
+| Services           | port | debug port |
+|--------------------|------|------------|
+| coffee-service     | 8080 | 9080       |
+| inventory-service  | 8082 | 9082       |
+| inventory-failover | 8083 | 9083       |
+| order-service      | 8081 | 9081       |
+| gateway            | 9090 | 9092       |
+
+
 ## CHANGES FOR KUBERNETES
 
-1. **Eurika** - is not used. Kubernetes is used for service discovery
+1. **Eureka** - is not used. Kubernetes is used for service discovery
 2. **Spring cloud config** - Not used. Kubernetes used to manage environment properties.
 3. **Single PostgreSQL instance** - One instance used. Just for simplicity, a production deployment should habe independent PostgreSQL database instances.
 4. **Single github repo** - Again for simplicity. Microservices typically would have independent soource code repository
@@ -151,3 +146,37 @@ State machine has total 5 actions, explore 2 of them:
 3. Resilience - istio (Service Mesh Pattern)
 4. Configuration - ConfigMap + Secrets
 5. API managment - istio (Service Mesh Pattern)
+
+## HOW WE PREPARE THIS PROJECT FOR KUBERNETES
+
+### Create deployments for every services:
+1. Postgres 
+
+    Create and apply deployment 
+    
+    ```kubectl create deployment postgres --image=postgres --dry-run=client -o=yaml > postgres-deployment.yml```
+    
+    Open file postgres-deployment.yml and add env block.
+
+    ```kubectl apply -f postgres-deployment.yml```
+
+    Create and apply service 
+    
+    ```kubectl create service clusterip postgres --tcp=5432:5432 --dry-run=client -o=yaml > postgres-service.yml```
+
+    ```kubectl apply -f postgres-service.yml```
+2. JMS
+
+    ```kubectl create deployment jms --image=vromero/activemq-artemis --dry-run=client -o=yaml > jms-deployment.yml```
+
+    ```kubectl apply -f jms-deployment.yml```
+
+    ```kubectl create service clusterip jms --tcp=8161:8161 --tcp=61616:61616 --dry-run=client -o=yaml > jms-service.yml```
+
+    ```kubectl apply -f jms-service.yml```
+
+3. 
+
+10. Check all deployment and services
+
+    ```kubectl get all```
