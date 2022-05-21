@@ -21,4 +21,11 @@ spec:
       - image: postgres
         name: postgres
         resources: {}
+        env: 
+          - name: POSTGRES_DB
+            value: postgres
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: postgres
 status: {}
