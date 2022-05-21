@@ -218,3 +218,41 @@ Filebeat collect console logs from every services and shipping it to elastic. Ki
 10. Check all deployment and services
 
     ```kubectl get all```
+
+11. Add readiness and liveness check. 
+
+    Each service depends on the other and must wait for all dependent services before starting. For that we are use kubernetes readiness and liveness block
+
+    add to each service properties file this:
+    ```
+    management.endpoint.health.probes.enabled=true
+    management.health.readinessstate.enabled=true
+    management.health.livenessstate.enabled=true
+    ```
+
+    add this block in each deployment:
+    ```
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+    ```
+
+12. Add gracefull shutdown for every service
+
+    add to each service properties file this:
+    ```
+    server.shutdown=graceful
+    ```
+
+    add this block in each deployment:
+    ```
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+    ```

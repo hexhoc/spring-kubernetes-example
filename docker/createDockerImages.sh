@@ -25,11 +25,11 @@ docker build -t hexhoc/kbe-coffeehouse-order-service .
 
 cd "../docker" || exit
 
-# docker push hexhoc/kbe-coffeehouse-coffee-service
-# docker push hexhoc/kbe-coffeehouse-coffee-service
-# docker push hexhoc/kbe-coffeehouse-inventory-failover 
-# docker push hexhoc/kbe-coffeehouse-inventory-service
-# docker push hexhoc/kbe-coffeehouse-order-service
+docker push hexhoc/kbe-coffeehouse-coffee-service
+docker push hexhoc/kbe-coffeehouse-coffee-service
+docker push hexhoc/kbe-coffeehouse-inventory-failover 
+docker push hexhoc/kbe-coffeehouse-inventory-service
+docker push hexhoc/kbe-coffeehouse-order-service
 
 # docker-compose stop
 # docker-compose rm -f

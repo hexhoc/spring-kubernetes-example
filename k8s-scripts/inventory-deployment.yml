@@ -34,4 +34,8 @@ spec:
           httpGet:
             port: 8082
             path: /actuator/health/liveness
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
 status: {}
