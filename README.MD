@@ -73,7 +73,7 @@ Work order:
 3. **coffee-service** if the inventory on hand <= min inventory, **coffee-service** send message to brew more coffee in queue **brewing-request**
 4. **coffee-service** listen queue (**BrewCoffeeListener**. After get that message **coffee-service** begin brew coffee, increase quantity.
 5. **coffee-service** send new quantity in queue **new-inventory**
-6. **inventory-service** listen queue **new-inventory**. Get new inventory object (coffee id with quantity) and save it in db (table **coffee_inventory**)
+6. **inventory-service** listen queue **new-inventory** in **NewInventoryListener.listen()**. Get new inventory object (coffee id with quantity) and save it in db (table **coffee_inventory**)
 
 ### 2. Create tasting room order (order-service, every 500 ms)
 1. **order-service** create new order with random coffee. **tastingRoomService.createTastingRoomOrder()**. Set order status = NEW

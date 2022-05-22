@@ -7,7 +7,9 @@ import com.example.inventoryservice.repositories.CoffeeInventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,4 +29,20 @@ public class NewInventoryListener {
                 .upc(event.getCoffeeDto().getUpc())
                 .build());
     }
+
+    @Transactional
+    @KafkaListener(
+            topics = JmsConfig.NEW_INVENTORY_QUEUE,
+            groupId = "inventory-service-group",
+            containerFactory = "kafkaJsonListenerContainerFactory")
+    public void kafkaListener(NewInventoryEvent newInventoryEvent) {
+        log.debug(newInventoryEvent.toString());
+
+        coffeeInventoryRepository.save(CoffeeInventory.builder()
+                .coffeeId(newInventoryEvent.getCoffeeDto().getId())
+                .quantityOnHand(newInventoryEvent.getCoffeeDto().getQuantityOnHand())
+                .upc(newInventoryEvent.getCoffeeDto().getUpc())
+                .build());
+    }
+
 }
