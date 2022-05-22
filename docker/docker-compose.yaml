@@ -46,6 +46,42 @@ services:
         ports:
             - 8161:8161
             - 61616:61616
+
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        container_name: zookeeper
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        ports:
+            - 2181:2181
+
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        container_name: kafka
+        depends_on:
+            - zookeeper
+        ports:
+            # kafka service is exposed to the host applications through port 29092, but it is actually
+            # advertised on port 9092 within the container environment
+            - 29092:29092
+            - 9101:9101
+        environment:
+            KAFKA_BROKER_ID: 1
+            # Comma separated host:port pairs, each corresponding to a Zookeeper Server.
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            # Listeners to publish to ZooKeeper for clients to use, if different than the listeners config property.
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+            # Map between listener names and security protocols.
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+            # The replication factor for the offsets topic
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+            # The replication factor for the transaction topic
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_JMX_PORT: 9101
+            KAFKA_JMX_HOSTNAME: localhost
+
     coffee-service:
         image: hexhoc/kbe-coffeehouse-coffee-service
         container_name: coffee-service
@@ -106,9 +142,9 @@ services:
         container_name: gateway
         ports:
             - 9090:9090
-            - 9092:9092
+            - 9099:9099
         environment:
-            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9092
+            - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9099
         depends_on:
             - inventory-service
             - coffee-service

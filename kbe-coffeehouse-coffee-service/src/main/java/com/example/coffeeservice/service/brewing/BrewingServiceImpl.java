@@ -9,6 +9,7 @@ import com.example.coffeeservice.dto.mapper.CoffeeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,6 +23,7 @@ public class BrewingServiceImpl implements BrewingService {
     private final CoffeeInventoryService coffeeInventoryService;
     private final CoffeeRepository coffeeRepository;
     private final JmsTemplate jmsTemplate;
+    private final KafkaTemplate<String, BrewCoffeeEvent> kafkaTemplate;
     private final CoffeeMapper coffeeMapper;
 
     @Override
@@ -37,6 +39,9 @@ public class BrewingServiceImpl implements BrewingService {
 
             if(coffee.getMinOnHand() >= invQoh ) {
                 jmsTemplate.convertAndSend(JmsConfig.BREWING_REQUEST_QUEUE,
+                        new BrewCoffeeEvent(coffeeMapper.coffeeToCoffeeDto(coffee)));
+
+                kafkaTemplate.send(JmsConfig.BREWING_REQUEST_QUEUE,
                         new BrewCoffeeEvent(coffeeMapper.coffeeToCoffeeDto(coffee)));
             }
         });

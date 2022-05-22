@@ -134,7 +134,7 @@ Filebeat collect console logs from every services and shipping it to elastic. Ki
 | inventory-service  | 8082 | 9082       |
 | inventory-failover | 8083 | 9083       |
 | order-service      | 8081 | 9081       |
-| gateway            | 9090 | 9092       |
+| gateway            | 9090 | 9099       |
 
 
 ## CHANGES FOR KUBERNETES

@@ -31,6 +31,7 @@ cd "../docker" || exit
 #docker push hexhoc/kbe-coffeehouse-inventory-service
 #docker push hexhoc/kbe-coffeehouse-order-service
 
- docker-compose stop
- docker-compose rm -f
+# docker-compose stop
+# docker-compose rm -f
+ docker-compose down
  docker-compose up --build -d
