@@ -1,6 +1,7 @@
 package com.example.coffeeservice.config.kafka;
 
 import com.example.coffeeservice.model.events.BrewCoffeeEvent;
+import com.example.coffeeservice.model.events.CoffeeOrderValidationResult;
 import com.example.coffeeservice.model.events.NewInventoryEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -63,7 +64,6 @@ public class KafkaProducerConfig {
     /////////////////////////////////
     // BrewCoffeeEvent
     /////////////////////////////////
-
     @Bean
     public KafkaTemplate<String, BrewCoffeeEvent> brewCoffeeEventKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
@@ -72,9 +72,16 @@ public class KafkaProducerConfig {
     /////////////////////////////////
     // NewInventoryEvent
     /////////////////////////////////
-
     @Bean
     public KafkaTemplate<String, NewInventoryEvent> newInventoryEventKafkaTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    /////////////////////////////////
+    // NewInventoryEvent
+    /////////////////////////////////
+    @Bean
+    public KafkaTemplate<String, CoffeeOrderValidationResult> coffeeOrderValidationResultKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
 }

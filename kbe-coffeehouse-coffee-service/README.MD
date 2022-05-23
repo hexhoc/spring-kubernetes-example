@@ -20,6 +20,6 @@ Every 5 seconds, a scheduled task is run that checks the current inventory on ha
 Coffee-service send message to brew coffee in activeMq and then listen that message(**BrewCoffeeListener** class), and after get that message from queue start brewing (**BrewingServiceImpl** class)
 
 ### Order validation
-Class **CoffeeOrderValidationListener** used for listen (@JmsListener) any order event from **order-service** (validate-order queue) and after compute result send it back to **order-service** (validate-order-result queue)
+Class **CoffeeOrderValidationListener** used for listen (@KafkaListener) any order event from **order-service** (validate-order queue) and after compute result send it back to **order-service** (validate-order-result queue)
 
 
